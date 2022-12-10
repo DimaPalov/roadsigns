@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import sys
 import math
-img = cv2.imread("Pedestriancrossing.png")
+img = cv2.imread("Tests/Secondaryroadjunction2.png")
 img2 = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 #---------------------------------------------
 lower1 = np.array([0, 50, 50])
@@ -33,12 +33,11 @@ for c in rcontours:
     x,y,w,h = cv2.boundingRect(cont)
     center = (int(x),int(y))
     r = int(radius)
-    print(w*h-cv2.contourArea(cont,True))
     if r>0 and abs(r-cv2.contourArea(cont)/(math.pi*r))<=r/20 and cv2.contourArea(cont)>20:# and rhierarchy[0][i][3]==-1:
         circles.append(cont)
         if rhierarchy[0][i][3]==-1:
             shape = "Circle"
-    elif r>0 and w+h-cv2.arcLength(cont,True)/2<(w+h)/20 and w*h-cv2.contourArea(cont,True)/2<20 and len(smallcont)<5 and cv2.contourArea(cont)>20:# and rhierarchy[0][i][3]==-1:
+    elif r>0 and w+h-cv2.arcLength(cont,True)/2<(w+h)/20 and len(smallcont)<5 and cv2.contourArea(cont)>20:# and rhierarchy[0][i][3]==-1:
         rectangles.append(cont)
         if rhierarchy[0][i][3]==-1:
             shape = "Rectangle"
@@ -52,7 +51,7 @@ for c in rcontours:
             shape = "Strange"
     i+=1
 print(shape)
-cv2.drawContours(img, rectangles, -1, (0,255,0), 1)
+cv2.drawContours(img, others, -1, (0,255,0), 1)
 cv2.imshow("white", white)
 cv2.imshow("img",img)
 cv2.waitKey(0)
