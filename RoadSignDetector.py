@@ -52,7 +52,7 @@ for c in rcontours:
         if rhierarchy[0][i][3]==-1:
             shape = "Strange"
     i+=1
-print(shape)
+#print(shape)
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 if shape=="Strange":
     cv2.drawContours(img, others, -1, (0,255,0), 1)
@@ -93,7 +93,14 @@ elif shape=="Triangle":
     elif len(others)>5:
         print("Children")
     elif white[np.shape(img)[0]//5*2][np.shape(img)[1]//2]==0:
-        print(1)
+        right = white[np.shape(white)[0]//2-15:np.shape(white)[0]//2+40,np.shape(white)[1]//2+10:np.shape(white)[1]//2+15]
+        left = white[np.shape(white)[0]//2+15:np.shape(white)[0]//2-40,np.shape(white)[1]//2+10:np.shape(white)[1]//2+15]
+        if np.sum(right)!=0 and np.sum(left)!=0:
+            print("Intersection with a secondary road")
+        elif np.sum(left)!=0:
+            print("Secondary road junction on the left")
+        elif np.sum(right)!=0:
+            print("Secondary road junction on the right")
     else:
         print(len(rhierarchy[0]))
         if len(rhierarchy[0])==4:
