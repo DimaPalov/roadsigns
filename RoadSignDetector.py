@@ -6,6 +6,7 @@ print("Write down the path to file")
 ans = str(input())
 img = cv2.imread(ans)
 img2 = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+#Creating red mask
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 lower1 = np.array([0, 50, 50])
 upper1 = np.array([8, 255, 255])
@@ -14,10 +15,12 @@ upper2 = np.array([179, 255, 255])
 mask1 = cv2.inRange(img2, lower1, upper1)
 mask2 = cv2.inRange(img2, lower2, upper2)
 red = mask1 + mask2
+#Creating white mask
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 lower = np.array([0, 0, 150])
 upper = np.array([255, 100, 255])
 white = cv2.inRange(img2, lower, upper)
+#Getting contours
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 _, trash = cv2.threshold(white, 100, 255, cv2.THRESH_BINARY)
 rcontours, rhierarchy = cv2.findContours(trash, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -27,6 +30,7 @@ rectangles = []
 others = []
 shape = "Strange"
 i=0
+#Sorting contours by their shape: circles, rectangles, triangles and others
 for c in rcontours:
     con = cv2.arcLength(c, True)
     cont = cv2.approxPolyDP(c, con/10000, True)
@@ -54,14 +58,12 @@ for c in rcontours:
     i+=1
 #print(shape)
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-if shape=="Strange":
-    cv2.drawContours(img, others, -1, (0,255,0), 1)
+if shape=="Strange": #If sign's shape is "strange"
     if len(rhierarchy[0])==8:
         print("Stop")
     else:
         print("Can't recognize")
-elif shape=="Circle":
-    cv2.drawContours(img, circles, -1, (0,255,0), 1)
+elif shape=="Circle": #If sign's shape is circle
     if len(rhierarchy[0])>2:
         print("Entry is prohibited")
     else:
@@ -71,8 +73,7 @@ elif shape=="Circle":
             print("Driving left")
         else:
             print("Driving straight")
-elif shape=="Rectangle":
-    cv2.drawContours(img, rectangles, -1, (0,255,0), 1)
+elif shape=="Rectangle": #If sign's shape is rectangle
     if np.sum(red)<500000:
         if len(triangles)>0:
             if len(rhierarchy[0])>4:
@@ -89,8 +90,7 @@ elif shape=="Rectangle":
                 print("Deadlock to the left")
     else:
         print("Hazard chevron")
-elif shape=="Triangle":
-    cv2.drawContours(img, others, -1, (0,255,0), 1)
+elif shape=="Triangle": #If the sign's shape is triangle
     if len(circles)==1:
         print("Hazards")
     elif len(others)>5:
@@ -119,9 +119,12 @@ elif shape=="Triangle":
                 print("Dangerous turns")
         else:
             print("Narrowing of the road")
-else:
+else: #If the sign is not known for this program
     print("Can't recognize")
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-cv2.imshow("white", trash)
+cv2.drawContours(img, circles, -1, (0,255,0), 1) #Circles are green 
+cv2.drawContours(img, triangles, -1, (255,0,0), 1) #Triangles are blue
+cv2.drawContours(img, rectangles, -1, (0,0,255), 1) #Rectangles are red
+cv2.drawContours(img, others, -1, (255,0,255), 1) #Other contours are purple
 cv2.imshow("img",img)
 cv2.waitKey(0)
