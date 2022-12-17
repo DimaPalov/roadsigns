@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import sys
 import math
-img = cv2.imread("Tests/Secondaryroadjunction2.png")
+img = cv2.imread("Tests/Drivingturn.png")
 img2 = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 #---------------------------------------------
 lower1 = np.array([0, 50, 50])
@@ -37,7 +37,7 @@ for c in rcontours:
         circles.append(cont)
         if rhierarchy[0][i][3]==-1:
             shape = "Circle"
-    elif r>0 and w+h-cv2.arcLength(cont,True)/2<(w+h)/20 and len(smallcont)<5 and cv2.contourArea(cont)>20:# and rhierarchy[0][i][3]==-1:
+    elif r>0 and w+h-cv2.arcLength(cont,True)/2<(w+h)/20 and len(smallcont)<5 and w*h-cv2.contourArea(cont)<500 and cv2.contourArea(cont)>20:# and rhierarchy[0][i][3]==-1:
         rectangles.append(cont)
         if rhierarchy[0][i][3]==-1:
             shape = "Rectangle"
@@ -51,7 +51,22 @@ for c in rcontours:
             shape = "Strange"
     i+=1
 print(shape)
+if shape=="Strange":
+    print("Stop")
+elif shape=="Circle":
+    if len(rhierarchy[0])>2:
+        print("Entry is prohibited")
+    else:
+        #np.savetxt(sys.stdout, white, fmt="%d")
+        print(white[np.shape(img)[0]//2][np.shape(img)[1]//2])
+        print(white[np.shape(img)[0]//5*2+5][np.shape(img)[1]//5*3+20],np.shape(img)[0]//5*3+20,np.shape(img)[1]//5*2+5)
+        if white[np.shape(img)[0]//2][np.shape(img)[1]//2]==0 and white[np.shape(img)[0]//5*2+5][np.shape(img)[1]//5*3+20]==255:
+            print("Driving right")
+        elif white[np.shape(img)[0]//2][np.shape(img)[1]//2]==0 and white[np.shape(img)[0]//5*2+5][np.shape(img)[1]//5+20]==255:
+            print("Driving left")
+        else:
+            print("Driving straight")
 cv2.drawContours(img, others, -1, (0,255,0), 1)
-cv2.imshow("white", white)
+cv2.imshow("white", trash)
 cv2.imshow("img",img)
 cv2.waitKey(0)
