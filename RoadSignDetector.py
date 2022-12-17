@@ -92,6 +92,21 @@ elif shape=="Triangle":
         print("Hazards")
     elif len(others)>5:
         print("Children")
+    elif white[np.shape(img)[0]//5*2][np.shape(img)[1]//2]==0:
+        print(1)
+    else:
+        print(len(rhierarchy[0]))
+        if len(rhierarchy[0])==4:
+            if white[106][110]==0:
+                print("Bump")
+            elif white[np.shape(img)[0]//5*4][np.shape(img)[1]//2-5]==0:
+                print("Dangerous turn right")
+            elif white[np.shape(img)[0]//5*4][np.shape(img)[1]//2+5]==0:
+                print("Dangerous turn left")
+            else:
+                print("Dangerous turns")
+        else:
+            print("Narrowing of the road")
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 cv2.imshow("white", trash)
 cv2.imshow("img",img)
