@@ -56,7 +56,10 @@ for c in rcontours:
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 if shape=="Strange":
     cv2.drawContours(img, others, -1, (0,255,0), 1)
-    print("Stop")
+    if len(rhierarchy[0])==8:
+        print("Stop")
+    else:
+        print("Can't recognize")
 elif shape=="Circle":
     cv2.drawContours(img, circles, -1, (0,255,0), 1)
     if len(rhierarchy[0])>2:
@@ -101,6 +104,8 @@ elif shape=="Triangle":
             print("Secondary road junction on the left")
         elif np.sum(right)!=0:
             print("Secondary road junction on the right")
+        else:
+            print("Can't recognize")
     else:
         print(len(rhierarchy[0]))
         if len(rhierarchy[0])==4:
@@ -114,6 +119,8 @@ elif shape=="Triangle":
                 print("Dangerous turns")
         else:
             print("Narrowing of the road")
+else:
+    print("Can't recognize")
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 cv2.imshow("white", trash)
 cv2.imshow("img",img)
